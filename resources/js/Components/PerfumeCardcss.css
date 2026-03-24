@@ -1,0 +1,61 @@
+/* Card container */
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+a > div {
+  background: #f6f1ea;
+  border-radius: 16px;
+  padding: 16px;
+  width: 360px;
+  transition: transform 0.2s ease;
+}
+
+a > div:hover {
+  transform: translateY(-4px);
+}
+
+/* Image */
+.image {
+  width: 100%;
+  height: 320px;
+  object-fit: cover;
+  border-radius: 12px;
+  margin-bottom: 12px;
+}
+
+/* Perfume name */
+.name {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+/* Price */
+.price {
+  font-size: 16px;
+  font-weight: 500;
+  float: right;
+  margin-top: -24px;
+}
+
+/* Description */
+.description {
+    
+  font-size: 14px;
+  color: #6b6b6b;
+  margin-top: 8px;
+  line-height: 1.4;
+}
+
+
+.label {
+ 
+  background: #eee6dc;
+  padding: 4px 10px;
+  font-size: 12px;
+  border-radius: 12px;
+  top: 14px;
+  left: 14px;
+}
