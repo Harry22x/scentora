@@ -18,6 +18,12 @@ export default function GuestLayout({ children }) {
         >
             Log in
         </Link>
+         <Link 
+            href="/register" 
+            className="text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors"
+        >
+            Sign Up
+        </Link>
     </div>
 </nav>
 

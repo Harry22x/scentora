@@ -11,6 +11,7 @@ export default function Register() {
         email: '',
         password: '',
         password_confirmation: '',
+        role:'customer',
     });
 
     const submit = (e) => {
