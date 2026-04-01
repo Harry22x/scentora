@@ -1,21 +1,20 @@
 
-a {
-  text-decoration: none;
-  color: inherit;
-}
-
-a > div {
+.perfume-card {
   background: #f6f1ea;
   border-radius: 16px;
   padding: 16px;
   width: 360px;
   transition: transform 0.2s ease;
+  position: relative;
 }
 
-a > div:hover {
+.perfume-card:hover {
   transform: translateY(-4px);
 }
 
+.image-container {
+  /* Container for image if needed */
+}
 
 .image {
   width: 100%;
@@ -25,13 +24,11 @@ a > div:hover {
   margin-bottom: 12px;
 }
 
-
 .name {
   font-size: 18px;
   font-weight: 600;
   margin-bottom: 6px;
 }
-
 
 .price {
   font-size: 16px;
@@ -40,22 +37,37 @@ a > div:hover {
   margin-top: -24px;
 }
 
-
 .description {
-    
   font-size: 14px;
   color: #6b6b6b;
   margin-top: 8px;
   line-height: 1.4;
 }
 
-
 .label {
- 
   background: #eee6dc;
   padding: 4px 10px;
   font-size: 12px;
   border-radius: 12px;
+  position: absolute;
   top: 14px;
   left: 14px;
+}
+
+.add-to-cart-btn {
+  background: #1a1a1a;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  margin-top: 12px;
+  width: 100%;
+  transition: background 0.2s ease;
+}
+
+.add-to-cart-btn:hover {
+  background: #333;
 }

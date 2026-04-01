@@ -20,6 +20,11 @@ export default function Dashboard({ perfumes }) {
         }
     };
 
+    if(user.role != "admin"){
+        return null;
+    
+    }
+
     return (
         <AuthenticatedLayout
             header={<h2 className="text-xl font-semibold leading-tight text-gray-800">Inventory Management</h2>}

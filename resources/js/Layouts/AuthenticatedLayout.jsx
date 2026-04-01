@@ -7,6 +7,7 @@ import { useState } from 'react';
 
 export default function AuthenticatedLayout({ header, children }) {
     const user = usePage().props.auth.user;
+    const { cartCount } = usePage().props;
 
     const [showingNavigationDropdown, setShowingNavigationDropdown] =
         useState(false);
@@ -32,11 +33,17 @@ export default function AuthenticatedLayout({ header, children }) {
                                     Dashboard
                                 </NavLink>
                             </div>:<></>}
+
+                            <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                            <NavLink href={route('cart.show')} className="relative">
+    Cart ({cartCount}) items
+</NavLink></div>
                            
                         </div>
 
                         <div className="hidden sm:ms-6 sm:flex sm:items-center">
                             <div className="relative ms-3">
+                                
                                 <Dropdown>
                                     <Dropdown.Trigger>
                                         <span className="inline-flex rounded-md">
