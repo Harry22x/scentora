@@ -15,7 +15,7 @@ class PerfumeController extends Controller
     {
         $perfumes = Perfume::all();
 
-    // Render the React page and pass the perfumes as a 'prop'
+   
     return Inertia::render('Perfumes/Index', [
         'perfumes' => $perfumes
     ]);
@@ -34,7 +34,7 @@ class PerfumeController extends Controller
      */
     public function store(Request $request)
     {
-        // 1. Validate the incoming data
+        
     $validated = $request->validate([
         'name' => 'required|string|max:255',
         'category' => 'required|string|max:255',
@@ -46,8 +46,7 @@ class PerfumeController extends Controller
 
     ]);
     if ($request->hasFile('imageUrl')) {
-        // This saves the file to storage/app/public/perfumes
-        // and returns the path (e.g., perfumes/filename.jpg)
+       
         $path = $request->file('imageUrl')->store('perfumes', 'public');
         $validated['imageUrl'] = $path;
     }
@@ -88,21 +87,19 @@ class PerfumeController extends Controller
         'category' => 'required|string',
         'price' => 'required|numeric',
         'stock' => 'required|integer',
-        'imageUrl' => 'nullable|image|max:2048', // Nullable because they might not change the image
+        'imageUrl' => 'nullable|image|max:2048', 
     ]);
 
   if ($request->hasFile('imageUrl')) {
-        // Delete the old file from physical storage
+      
         if ($perfume->imageUrl) {
             \Storage::disk('public')->delete($perfume->imageUrl);
         }
 
-        // Store the new file and update the path in our validated data
         $path = $request->file('imageUrl')->store('perfumes', 'public');
         $validated['imageUrl'] = $path;
     } else {
-        // IMPORTANT: If no new file, remove imageUrl from the validated array 
-        // so Laravel doesn't try to overwrite the existing DB value with null.
+
         unset($validated['imageUrl']);
     }
 

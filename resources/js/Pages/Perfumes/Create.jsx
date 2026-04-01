@@ -2,7 +2,7 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head, useForm, Link } from '@inertiajs/react';
 
 export default function Create() {
-    // Initialize the form helper
+  
     const { data, setData, post, processing, errors } = useForm({
         name: '',
         category: '',
@@ -25,7 +25,7 @@ export default function Create() {
                 <div className="max-w-3xl mx-auto sm:px-6 lg:px-8">
                     <div className="bg-white p-6 shadow-sm sm:rounded-lg border">
                         <form onSubmit={submit} className="space-y-4">
-                            {/* Name Input */}
+                           
                             <div>
                                 <label className="block font-medium text-sm text-gray-700">Perfume Name</label>
                                 <input
@@ -49,7 +49,7 @@ export default function Create() {
                             </div>
 
 
-                            {/* category Input */}
+                           
                             <div className="grid grid-cols-2 gap-4">
                                 <div>
                                 <label className="block font-medium text-sm text-gray-700">category</label>
@@ -67,7 +67,7 @@ export default function Create() {
                                         type="file"
                                         className="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
                                         
-                                    onChange={e => setData('imageUrl', e.target.files[0])} // Capture the actual file object
+                                    onChange={e => setData('imageUrl', e.target.files[0])} 
         
     />
     {errors.imageUrl && <div className="text-red-600 text-sm mt-1">{errors.imageUrl}</div>}
@@ -78,7 +78,7 @@ export default function Create() {
         
 
                             <div className="grid grid-cols-2 gap-4">
-                                {/* Price */}
+                              
                                 <div>
                                     <label className="block font-medium text-sm text-gray-700">Price ($)</label>
                                     <input
@@ -89,7 +89,7 @@ export default function Create() {
                                         className="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
                                     />
                                 </div>
-                                {/* Stock */}
+                               
                                 <div>
                                     <label className="block font-medium text-sm text-gray-700">Stock Units</label>
                                     <input
