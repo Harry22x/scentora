@@ -10,10 +10,14 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
-#[Fillable(['name', 'email', 'password','role'])]
+#[Fillable(['first_name','last_name', 'email', 'password','role'])]
 #[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable
 {
+    public function getFullNameAttribute()
+{
+    return "{$this->first_name} {$this->last_name}";
+}
     /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable;
 

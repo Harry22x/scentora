@@ -87,7 +87,9 @@ export default function Show({ auth, items }) {
                                     <span>${subtotal.toFixed(2)}</span>
                                 </div>
                                <button 
-    onClick={() => router.post(route('cart.checkout'))}
+    onClick={() => router.post(route('cart.checkout'), {}, {
+        onSuccess: () => alert('Purchase successful!')
+    })}
     className="w-full bg-[#1a1a1a] text-white py-4 rounded-full font-medium hover:bg-gray-800 transition shadow-lg"
 >
     Confirm Purchase

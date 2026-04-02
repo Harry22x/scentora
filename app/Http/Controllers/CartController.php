@@ -6,13 +6,16 @@ use Illuminate\Http\Request;
 use App\Models\Perfume;
 use Inertia\Inertia;
 use App\Models\Transaction;
+use App\Models\Order;
+use App\Models\OrderItem;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 
 class CartController extends Controller
 {
     public function add(Request $request, $id)
     {
-        // 1. Get the current cart from session (or empty array if it doesn't exist)
+        // 1. Get the current cart from session (or make it  empty array if it doesn't exist)
         $cart = $request->session()->get('cart', []);
 
         // 2. If the perfume is already in the cart, increment quantity
@@ -73,46 +76,43 @@ public function checkout(Request $request)
 {
     $cart = $request->session()->get('cart', []);
     
-    if (empty($cart)) {
-        return redirect()->back()->with('error', 'Cart is empty');
-    }
+    if (empty($cart)) return redirect()->back();
 
-    $cartItems = [];
-    $total = 0;
+    // Use a DB Transaction so if one part fails, NOTHING is saved
+    DB::transaction(function () use ($request, $cart) {
+        // 1. Create the Main Order
+        $order = Order::create([
+            'user_id' => auth()->id(),
+            'total_amount' => 0, // it will update this in a second
+            'status' => 'pending',
+        ]);
 
-    foreach ($cart as $id => $quantity) {
-        $perfume = \App\Models\Perfume::find($id);
-        
-        if ($perfume) {
-          
-            if ($perfume->stock < $quantity) {
-                return redirect()->back()->with('error', "Sorry, only {$perfume->stock} units of {$perfume->name} left.");
-            }
+        $total = 0;
+
+        // 2. Loop through cart and create OrderItems
+        foreach ($cart as $id => $quantity) {
+            $perfume = \App\Models\Perfume::find($id);
             
-            $perfume->decrement('stock', $quantity); 
-            // Laravel helper that does: $perfume->stock = $perfume->stock - $quantity;
-            // --- NEW STOCK LOGIC END ---
+            if ($perfume && $perfume->stock >= $quantity) {
+                $subtotal = $perfume->price * $quantity;
+                $total += $subtotal;
 
-            $subtotal = $perfume->price * $quantity;
-            $total += $subtotal;
-            $cartItems[] = [
-                'name' => $perfume->name,
-                'quantity' => $quantity,
-                'price' => $perfume->price
-            ];
+                OrderItem::create([
+                    'order_id' => $order->id,
+                    'perfume_id' => $perfume->id,
+                    'quantity' => $quantity,
+                    'price' => $perfume->price, // Snapshot of current price
+                ]);
+
+                $perfume->decrement('stock', $quantity);
+            }
         }
-    }
 
-    // Create the Transaction record
-    \App\Models\Transaction::create([
-        'user_id' => auth()->id(),
-        'total_amount' => $total,
-        'items_json' => json_encode($cartItems), 
-        'status' => 'pending' 
-    ]);
+        // 3. Update the final total on the order
+        $order->update(['total_amount' => $total]);
+    });
 
     $request->session()->forget('cart');
-
-    return redirect()->route('home')->with('message', 'Purchase successful!');
+    return redirect()->route('home')->with('message', 'Order placed successfully!');
 }
 }
