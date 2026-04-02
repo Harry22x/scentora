@@ -21,7 +21,7 @@ const Layout = auth.user ? AuthenticatedLayout : GuestLayout;
         <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
           {perfumes.map((perfume)=>(
             <div>
-              {console.log(perfume.id)}
+              {/* {console.log(perfume.id)} */}
               <PerfumeCard key={perfume.id} perfume={perfume} />
             </div>
           ))}

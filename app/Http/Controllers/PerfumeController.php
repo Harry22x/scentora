@@ -51,7 +51,7 @@ class PerfumeController extends Controller
         $validated['imageUrl'] = $path;
     }
 
-    // 2. Create the perfume in the database
+    // 2. add the perfume to the database
     \App\Models\Perfume::create($validated);
 
     // 3. Redirect back to the dashboard with a success message

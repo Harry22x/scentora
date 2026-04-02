@@ -27,29 +27,45 @@ export default function Show({ auth, items }) {
                 ) : (
                     <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
                         {/* Items List */}
-                        <div className="lg:col-span-8 space-y-4">
-                            {items.map((item) => (
-                                <div key={item.id} className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 flex items-center space-x-6">
-                                    <img src={`/storage/${item.imageUrl}`} className="w-10 h-10 object-cover rounded-lg" alt={item.name} />
-                                    
-                                    <div className="flex-1">
-                                        <h3 className="text-lg font-medium text-gray-900">{item.name}</h3>
-                                        <p className="text-gray-500 font-serif">${Number(item.price).toFixed(2)}</p>
-                                    </div>
-
-                                    {/* Quantity Controls */}
-                                    <div className="flex items-center border border-gray-200 rounded-full px-3 py-1">
-                                        <button onClick={() => updateQty(item.id, 'decrease')} className="px-2 text-gray-500 hover:text-black">-</button>
-                                        <span className="px-4 text-sm font-medium">{item.quantity}</span>
-                                        <button onClick={() => updateQty(item.id, 'increase')} className="px-2 text-gray-500 hover:text-black">+</button>
-                                    </div>
-
-                                    <div className="text-right min-w-[80px]">
-                                        <p className="font-medium text-gray-900">${(item.price * item.quantity).toFixed(2)}</p>
-                                        <button onClick={() => updateQty(item.id, 'remove')} className="text-xs text-red-500 mt-1 hover:underline">Remove</button>
-                                    </div>
-                                </div>
-                            ))}
+                        <div className="lg:col-span-8">
+                            <div className="overflow-x-auto bg-white rounded-xl shadow-sm border border-gray-100">
+                                <table className="min-w-full text-left divide-y divide-gray-200">
+                                    <thead className="bg-gray-50">
+                                        <tr>
+                                            <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-gray-500">Product</th>
+                                            <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-gray-500">Price</th>
+                                            <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-gray-500">Qty</th>
+                                            <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-gray-500">Total</th>
+                                            <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-gray-500">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody className="divide-y divide-gray-100">
+                                        {items.map((item) => (
+                                            <tr key={item.id}>
+                                                <td className="px-4 py-4 flex items-center gap-3">
+                                                    <img src={`/storage/${item.imageUrl}`} className="w-12 h-12 object-cover rounded-lg" alt={item.name} />
+                                                    <div>
+                                                        <h3 className="text-sm font-medium text-gray-900">{item.name}</h3>
+                                                        <p className="text-xs text-gray-500">{item.description ?? ''}</p>
+                                                    </div>
+                                                </td>
+                                                <td className="px-4 py-4 text-sm text-gray-700">${Number(item.price).toFixed(2)}</td>
+                                                <td className="px-4 py-4">
+                                                    <div className="inline-flex items-center border border-gray-200 rounded-full px-2 py-1">
+                                                        <button onClick={() => updateQty(item.id, 'decrease')} className="px-2 text-gray-500 hover:text-black">-</button>
+                                                        <span className="px-3 text-sm font-medium">{item.quantity}</span>
+                                                        <button onClick={() => updateQty(item.id, 'increase')} className="px-2 text-gray-500 hover:text-black">+</button>
+                                                    </div>
+                                                </td>
+                                                <td className="px-4 py-4 text-sm font-medium text-gray-900">${(item.price * item.quantity).toFixed(2)}</td>
+                                                <td className="px-4 py-4 text-sm">
+                                                    <button onClick={() => updateQty(item.id, 'remove')} className="text-red-500 hover:underline">Remove</button>
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
 
                         {/* Order Summary */}
@@ -70,9 +86,12 @@ export default function Show({ auth, items }) {
                                     <span>Total</span>
                                     <span>${subtotal.toFixed(2)}</span>
                                 </div>
-                                <button className="w-full bg-[#1a1a1a] text-white py-4 rounded-full font-medium hover:bg-gray-800 transition shadow-lg">
-                                    Proceed to Checkout
-                                </button>
+                               <button 
+    onClick={() => router.post(route('cart.checkout'))}
+    className="w-full bg-[#1a1a1a] text-white py-4 rounded-full font-medium hover:bg-gray-800 transition shadow-lg"
+>
+    Confirm Purchase
+</button>
                                 <p className="text-[10px] text-center text-gray-400 mt-4 uppercase tracking-tighter">
                                     Secure checkout powered by Scentora
                                 </p>

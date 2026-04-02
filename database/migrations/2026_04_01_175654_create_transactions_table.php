@@ -11,10 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('transactions', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
-        });
+      Schema::create('transactions', function (Blueprint $table) {
+    $table->id();
+    $table->foreignId('user_id')->constrained()->onDelete('cascade');
+    $table->decimal('total_amount', 10, 2);
+    $table->string('status')->default('pending'); // for example like pending, completed, cancelled
+    $table->text('items_json'); // We can store a snapshot of the cart here as JSON
+    $table->timestamps();
+});
     }
 
     /**

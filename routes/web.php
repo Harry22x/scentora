@@ -27,9 +27,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/cart/add/{id}', [CartController::class, 'add'])->name('cart.add');
 Route::get('/cart', [CartController::class, 'show'])->name('cart.show');
 Route::post('/cart/update/{id}/{action}', [CartController::class, 'update'])->name('cart.update');
+Route::post('/checkout', [CartController::class, 'checkout'])->middleware('auth')->name('cart.checkout');
     
-    // If you want to keep the other CRUD actions (create, edit, delete) 
-    // protected, put the resource here but exclude 'index'
+    //This contains all of the CRUD functionalities for the perfume table
     Route::resource('perfumes', PerfumeController::class)->except(['index']);
 });
 

@@ -13,12 +13,22 @@ export default function PerfumeCard({ perfume }) {
                 <div className="price">${perfume.price}</div>
                 <div className="description">{perfume.description}</div>
                 <div className="label">{perfume.category}</div>
-                <button 
+                {perfume.stock > 0 ? (<button 
                     className="add-to-cart-btn"
                     onClick={() => router.post(route('cart.add', perfume.id))}
                 >
                     Add to Cart
-                </button>
+                </button>):
+                (
+    <button 
+        disabled
+        className="mt-4 w-full bg-gray-200 text-gray-500 py-2 rounded-full text-sm cursor-not-allowed"
+    >
+        Out of Stock
+    </button>
+)
+                }
+                
             </div>
         </div>
     );

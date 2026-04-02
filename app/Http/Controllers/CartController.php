@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Perfume;
 use Inertia\Inertia;
+use App\Models\Transaction;
+use Illuminate\Support\Facades\Auth;
 
 class CartController extends Controller
 {
@@ -65,5 +67,52 @@ class CartController extends Controller
 
     $request->session()->put('cart', $cart);
     return redirect()->back();
+}
+
+public function checkout(Request $request)
+{
+    $cart = $request->session()->get('cart', []);
+    
+    if (empty($cart)) {
+        return redirect()->back()->with('error', 'Cart is empty');
+    }
+
+    $cartItems = [];
+    $total = 0;
+
+    foreach ($cart as $id => $quantity) {
+        $perfume = \App\Models\Perfume::find($id);
+        
+        if ($perfume) {
+          
+            if ($perfume->stock < $quantity) {
+                return redirect()->back()->with('error', "Sorry, only {$perfume->stock} units of {$perfume->name} left.");
+            }
+            
+            $perfume->decrement('stock', $quantity); 
+            // Laravel helper that does: $perfume->stock = $perfume->stock - $quantity;
+            // --- NEW STOCK LOGIC END ---
+
+            $subtotal = $perfume->price * $quantity;
+            $total += $subtotal;
+            $cartItems[] = [
+                'name' => $perfume->name,
+                'quantity' => $quantity,
+                'price' => $perfume->price
+            ];
+        }
+    }
+
+    // Create the Transaction record
+    \App\Models\Transaction::create([
+        'user_id' => auth()->id(),
+        'total_amount' => $total,
+        'items_json' => json_encode($cartItems), 
+        'status' => 'pending' 
+    ]);
+
+    $request->session()->forget('cart');
+
+    return redirect()->route('home')->with('message', 'Purchase successful!');
 }
 }
