@@ -1,8 +1,3 @@
-import Checkbox from '@/Components/Checkbox';
-import InputError from '@/Components/InputError';
-import InputLabel from '@/Components/InputLabel';
-import PrimaryButton from '@/Components/PrimaryButton';
-import TextInput from '@/Components/TextInput';
 import GuestLayout from '@/Layouts/GuestLayout';
 import { Head, Link, useForm } from '@inertiajs/react';
 
@@ -31,48 +26,53 @@ export default function Login({ status, canResetPassword }) {
                 </div>
             )}
 
-            <form onSubmit={submit}>
+            <form onSubmit={submit} className="mx-auto w-full max-w-xl space-y-6 p-6">
                 <div>
-                    <InputLabel htmlFor="email" value="Email" />
+                    <p id="email_label" className="text-sm font-medium text-gray-700">Email</p>
 
-                    <TextInput
+                    <input
                         id="email"
                         type="email"
                         name="email"
+                        aria-labelledby="email_label"
                         value={data.email}
-                        className="mt-1 block w-full"
+                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
                         autoComplete="username"
-                        isFocused={true}
                         onChange={(e) => setData('email', e.target.value)}
                     />
 
-                    <InputError message={errors.email} className="mt-2" />
+                    {errors.email && (
+                        <p className="mt-2 text-sm text-red-600">{errors.email}</p>
+                    )}
                 </div>
 
                 <div className="mt-4">
-                    <InputLabel htmlFor="password" value="Password" />
+                    <p id="password_label" className="text-sm font-medium text-gray-700">Password</p>
 
-                    <TextInput
+                    <input
                         id="password"
                         type="password"
                         name="password"
+                        aria-labelledby="password_label"
                         value={data.password}
-                        className="mt-1 block w-full"
+                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
                         autoComplete="current-password"
                         onChange={(e) => setData('password', e.target.value)}
                     />
 
-                    <InputError message={errors.password} className="mt-2" />
+                    {errors.password && (
+                        <p className="mt-2 text-sm text-red-600">{errors.password}</p>
+                    )}
                 </div>
 
-           
-
                 <div className="mt-4 flex items-center justify-end">
-                   
-
-                    <PrimaryButton className="ms-4" disabled={processing}>
+                    <button
+                        type="submit"
+                        className="ms-4 inline-flex items-center rounded-md bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                        disabled={processing}
+                    >
                         Log in
-                    </PrimaryButton>
+                    </button>
                 </div>
             </form>
         </GuestLayout>

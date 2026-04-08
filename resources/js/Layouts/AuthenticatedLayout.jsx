@@ -14,11 +14,11 @@ export default function AuthenticatedLayout({ header, children }) {
                        
                         <div className="flex items-center space-x-8">
 
-                            <Link href="/">
+                            <a href="/">
                                 <h1 className="text-2xl font-bold tracking-widest text-gray-800">
                                     SCENTORA
                                 </h1>
-                            </Link>
+                            </a>
 
                             {user.role === "admin" && (
                                 <a

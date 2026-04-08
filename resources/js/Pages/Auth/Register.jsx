@@ -1,7 +1,3 @@
-import InputError from '@/Components/InputError';
-import InputLabel from '@/Components/InputLabel';
-import PrimaryButton from '@/Components/PrimaryButton';
-import TextInput from '@/Components/TextInput';
 import GuestLayout from '@/Layouts/GuestLayout';
 import { Head, Link, useForm } from '@inertiajs/react';
 
@@ -27,74 +23,86 @@ export default function Register() {
         <GuestLayout>
             <Head title="Register" />
 
-            <form onSubmit={submit}>
-             <div className="grid gap-4">
-    <div>
-        <InputLabel htmlFor="first_name" value="First Name" />
-        <TextInput
-            id="first_name"
-            value={data.first_name}
-            onChange={(e) => setData('first_name', e.target.value)}
-            required
-        />
-    </div>
-    <div>
-        <InputLabel htmlFor="last_name" value="Last Name" />
-        <TextInput
-            id="last_name"
-            value={data.last_name}
-            onChange={(e) => setData('last_name', e.target.value)}
-            required
-        />
-    </div>
-</div>
+            <form onSubmit={submit} className="mx-auto w-full max-w-xl space-y-6 p-6">
+                <div className="grid gap-4">
+                    <div>
+                        <p id="first_name_label" className="text-sm font-medium text-gray-700">First Name</p>
+                        <input
+                            id="first_name"
+                            name="first_name"
+                            type="text"
+                            aria-labelledby="first_name_label"
+                            value={data.first_name}
+                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                            onChange={(e) => setData('first_name', e.target.value)}
+                            required
+                        />
+                    </div>
+                    <div>
+                        <p id="last_name_label" className="text-sm font-medium text-gray-700">Last Name</p>
+                        <input
+                            id="last_name"
+                            name="last_name"
+                            type="text"
+                            aria-labelledby="last_name_label"
+                            value={data.last_name}
+                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                            onChange={(e) => setData('last_name', e.target.value)}
+                            required
+                        />
+                    </div>
+                </div>
 
                 <div className="mt-4">
-                    <InputLabel htmlFor="email" value="Email" />
+                    <p id="email_label" className="text-sm font-medium text-gray-700">Email</p>
 
-                    <TextInput
+                    <input
                         id="email"
                         type="email"
                         name="email"
+                        aria-labelledby="email_label"
                         value={data.email}
-                        className="mt-1 block w-full"
+                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
                         autoComplete="username"
                         onChange={(e) => setData('email', e.target.value)}
                         required
                     />
 
-                    <InputError message={errors.email} className="mt-2" />
+                    {errors.email && (
+                        <p className="mt-2 text-sm text-red-600">{errors.email}</p>
+                    )}
                 </div>
 
                 <div className="mt-4">
-                    <InputLabel htmlFor="password" value="Password" />
+                    <p id="password_label" className="text-sm font-medium text-gray-700">Password</p>
 
-                    <TextInput
+                    <input
                         id="password"
                         type="password"
                         name="password"
+                        aria-labelledby="password_label"
                         value={data.password}
-                        className="mt-1 block w-full"
+                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
                         autoComplete="new-password"
                         onChange={(e) => setData('password', e.target.value)}
                         required
                     />
 
-                    <InputError message={errors.password} className="mt-2" />
+                    {errors.password && (
+                        <p className="mt-2 text-sm text-red-600">{errors.password}</p>
+                    )}
                 </div>
 
                 <div className="mt-4">
-                    <InputLabel
-                        htmlFor="password_confirmation"
-                        value="Confirm Password"
-                    />
+                    <p id="password_confirmation_label" className="text-sm font-medium text-gray-700">Confirm Password</p>
 
-                    <TextInput
+                    <input
                         id="password_confirmation"
                         type="password"
                         name="password_confirmation"
+                        aria-labelledby="password_confirmation_label"
                         value={data.password_confirmation}
-                        className="mt-1 block w-full"
+                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
                         autoComplete="new-password"
                         onChange={(e) =>
                             setData('password_confirmation', e.target.value)
@@ -102,10 +110,9 @@ export default function Register() {
                         required
                     />
 
-                    <InputError
-                        message={errors.password_confirmation}
-                        className="mt-2"
-                    />
+                    {errors.password_confirmation && (
+                        <p className="mt-2 text-sm text-red-600">{errors.password_confirmation}</p>
+                    )}
                 </div>
 
                 <div className="mt-4 flex items-center justify-end">
@@ -116,9 +123,13 @@ export default function Register() {
                         Already registered?
                     </Link>
 
-                    <PrimaryButton className="ms-4" disabled={processing}>
+                    <button
+                        type="submit"
+                        className="ms-4 inline-flex items-center rounded-md bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                        disabled={processing}
+                    >
                         Register
-                    </PrimaryButton>
+                    </button>
                 </div>
             </form>
         </GuestLayout>

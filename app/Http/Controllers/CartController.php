@@ -78,7 +78,7 @@ public function checkout(Request $request)
     
     if (empty($cart)) return redirect()->back();
 
-    // Use a DB Transaction so if one part fails, NOTHING is saved
+    // well use a DB Transaction so if one part fails, nothing is saved
     DB::transaction(function () use ($request, $cart) {
         // 1. Create the Main Order
         $order = Order::create([

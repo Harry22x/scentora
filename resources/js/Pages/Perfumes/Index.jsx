@@ -3,7 +3,7 @@ import GuestLayout from '@/Layouts/GuestLayout';
 import { Head } from '@inertiajs/react';
 import PerfumeCard from '@/Components/PerfumeCard';
 
-
+//Home Page
 export default function Index({ auth ,perfumes }) {
 const Layout = auth.user ? AuthenticatedLayout : GuestLayout;
   return (
