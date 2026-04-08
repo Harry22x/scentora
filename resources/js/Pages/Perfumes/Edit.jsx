@@ -47,6 +47,8 @@ export default function Edit({ perfume }) {
 
                     {/* Price & Stock */}
                     <div className="grid grid-cols-2 gap-4">
+                        <label>Price (Ksh.)</label>
+                        <label>Stock</label>
                         <input type="number" value={data.price} onChange={e => setData('price', e.target.value)} placeholder="Price" className="border-gray-300 rounded-md" />
                         <input type="number" value={data.stock} onChange={e => setData('stock', e.target.value)} placeholder="Stock" className="border-gray-300 rounded-md" />
                     </div>

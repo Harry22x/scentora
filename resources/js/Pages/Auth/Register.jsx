@@ -28,7 +28,7 @@ export default function Register() {
             <Head title="Register" />
 
             <form onSubmit={submit}>
-             <div className="grid grid-cols-2 gap-4">
+             <div className="grid gap-4">
     <div>
         <InputLabel htmlFor="first_name" value="First Name" />
         <TextInput

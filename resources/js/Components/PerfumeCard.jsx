@@ -10,7 +10,7 @@ export default function PerfumeCard({ perfume }) {
                     <img className="image" alt="Mask group" src={`/storage/${perfume.imageUrl}`} />
                 </div>
                 <div className="name">{perfume.name}</div>
-                <div className="price">${perfume.price}</div>
+                <div className="price">Ksh. {perfume.price}</div>
                 <div className="description">{perfume.description}</div>
                 <div className="label">{perfume.category}</div>
                 {perfume.stock > 0 ? (<button 

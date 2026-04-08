@@ -113,6 +113,6 @@ public function checkout(Request $request)
     });
 
     $request->session()->forget('cart');
-    return redirect()->route('home')->with('message', 'Order placed successfully!');
+    return redirect()->route('orders.index')->with('message', 'Order placed successfully!');
 }
 }

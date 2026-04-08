@@ -21,6 +21,16 @@ class PerfumeController extends Controller
     ]);
     }
 
+
+public function dashboard()
+{
+    return Inertia::render('Dashboard', [
+        'perfumes' => \App\Models\Perfume::all(),
+        
+        'orders' => \App\Models\Order::with(['user', 'items.perfume'])->latest()->get()
+    ]);
+}
+
     /**
      * Show the form for creating a new resource.
      */

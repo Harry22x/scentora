@@ -49,7 +49,7 @@ export default function Show({ auth, items }) {
                                                         <p className="text-xs text-gray-500">{item.description ?? ''}</p>
                                                     </div>
                                                 </td>
-                                                <td className="px-4 py-4 text-sm text-gray-700">${Number(item.price).toFixed(2)}</td>
+                                                <td className="px-4 py-4 text-sm text-gray-700">Ksh. {Number(item.price).toFixed(2)}</td>
                                                 <td className="px-4 py-4">
                                                     <div className="inline-flex items-center border border-gray-200 rounded-full px-2 py-1">
                                                         <button onClick={() => updateQty(item.id, 'decrease')} className="px-2 text-gray-500 hover:text-black">-</button>
@@ -57,7 +57,7 @@ export default function Show({ auth, items }) {
                                                         <button onClick={() => updateQty(item.id, 'increase')} className="px-2 text-gray-500 hover:text-black">+</button>
                                                     </div>
                                                 </td>
-                                                <td className="px-4 py-4 text-sm font-medium text-gray-900">${(item.price * item.quantity).toFixed(2)}</td>
+                                                <td className="px-4 py-4 text-sm font-medium text-gray-900">Ksh. {(item.price * item.quantity).toFixed(2)}</td>
                                                 <td className="px-4 py-4 text-sm">
                                                     <button onClick={() => updateQty(item.id, 'remove')} className="text-red-500 hover:underline">Remove</button>
                                                 </td>
@@ -75,7 +75,7 @@ export default function Show({ auth, items }) {
                                 <div className="space-y-4 border-b border-[#E8E1D6] pb-6 mb-6">
                                     <div className="flex justify-between text-gray-600">
                                         <span>Subtotal</span>
-                                        <span>${subtotal.toFixed(2)}</span>
+                                        <span>Ksh. {subtotal.toFixed(2)}</span>
                                     </div>
                                     <div className="flex justify-between text-gray-600">
                                         <span>Shipping</span>
@@ -84,7 +84,7 @@ export default function Show({ auth, items }) {
                                 </div>
                                 <div className="flex justify-between text-xl font-serif text-gray-900 mb-8">
                                     <span>Total</span>
-                                    <span>${subtotal.toFixed(2)}</span>
+                                    <span>Ksh. {subtotal.toFixed(2)}</span>
                                 </div>
                                <button 
     onClick={() => router.post(route('cart.checkout'), {}, {
@@ -94,9 +94,6 @@ export default function Show({ auth, items }) {
 >
     Confirm Purchase
 </button>
-                                <p className="text-[10px] text-center text-gray-400 mt-4 uppercase tracking-tighter">
-                                    Secure checkout powered by Scentora
-                                </p>
                             </div>
                         </div>
                     </div>

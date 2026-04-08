@@ -60,4 +60,16 @@ class ProfileController extends Controller
 
         return Redirect::to('/');
     }
+    public function myOrders()
+{
+   
+    $orders = \App\Models\Order::where('user_id', auth()->id())
+        ->with('items.perfume')
+        ->latest()
+        ->get();
+
+    return Inertia::render('Orders/Index', [
+        'orders' => $orders
+    ]);
+}
 }
