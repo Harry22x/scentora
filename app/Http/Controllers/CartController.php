@@ -10,23 +10,30 @@ use App\Models\Order;
 use App\Models\OrderItem;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\ValidationException;
 
 class CartController extends Controller
 {
     public function add(Request $request, $id)
     {
-        // 1. Get the current cart from session (or make it  empty array if it doesn't exist)
         $cart = $request->session()->get('cart', []);
+        $perfume = Perfume::find($id);
 
-        // 2. If the perfume is already in the cart, increment quantity
+        if (! $perfume) {
+            return redirect()->back()->withErrors(['cart' => 'Perfume not found.']);
+        }
+
+        $currentQuantity = $cart[$id] ?? 0;
+        if ($currentQuantity + 1 > $perfume->stock) {
+            return redirect()->back()->withErrors(['cart' => "Only {$perfume->stock} units are available for {$perfume->name}."]);
+        }
+
         if (isset($cart[$id])) {
             $cart[$id]++;
         } else {
-            // 3. Otherwise, add it with a quantity of 1
             $cart[$id] = 1;
         }
 
-        // 4. Put the updated cart back into the session
         $request->session()->put('cart', $cart);
 
         return redirect()->back()->with('message', 'Added to cart!');
@@ -44,8 +51,10 @@ class CartController extends Controller
                 $cartItems[] = [
                     'id' => $perfume->id,
                     'name' => $perfume->name,
+                    'description' => $perfume->description,
                     'price' => $perfume->price,
                     'imageUrl' => $perfume->imageUrl,
+                    'stock' => $perfume->stock,
                     'quantity' => $quantity
                 ];
             }
@@ -55,45 +64,67 @@ class CartController extends Controller
     }
 
     public function update(Request $request, $id, $action)
-{
-    $cart = $request->session()->get('cart', []);
+    {
+        $cart = $request->session()->get('cart', []);
 
-    if (isset($cart[$id])) {
-        if ($action === 'increase') {
-            $cart[$id]++;
-        } elseif ($action === 'decrease' && $cart[$id] > 1) {
-            $cart[$id]--;
-        } elseif ($action === 'remove') {
-            unset($cart[$id]);
+        if (isset($cart[$id])) {
+            if ($action === 'increase') {
+                $perfume = Perfume::find($id);
+                if (! $perfume) {
+                    return redirect()->back()->withErrors(['cart' => 'Perfume not found.']);
+                }
+
+                if ($cart[$id] + 1 > $perfume->stock) {
+                    return redirect()->back()->withErrors(['cart' => "Only {$perfume->stock} units are available for {$perfume->name}."]);
+                }
+
+                $cart[$id]++;
+            } elseif ($action === 'decrease' && $cart[$id] > 1) {
+                $cart[$id]--;
+            } elseif ($action === 'remove') {
+                unset($cart[$id]);
+            }
         }
+
+        $request->session()->put('cart', $cart);
+        return redirect()->back();
     }
 
-    $request->session()->put('cart', $cart);
-    return redirect()->back();
-}
+    public function checkout(Request $request)
+    {
+        $cart = $request->session()->get('cart', []);
+        
+        if (empty($cart)) {
+            return redirect()->back();
+        }
 
-public function checkout(Request $request)
-{
-    $cart = $request->session()->get('cart', []);
-    
-    if (empty($cart)) return redirect()->back();
-
-    // well use a DB Transaction so if one part fails, nothing is saved
-    DB::transaction(function () use ($request, $cart) {
-        // 1. Create the Main Order
-        $order = Order::create([
-            'user_id' => auth()->id(),
-            'total_amount' => 0, // it will update this in a second
-            'status' => 'pending',
-        ]);
-
-        $total = 0;
-
-        // 2. Loop through cart and create OrderItems
+        $items = [];
         foreach ($cart as $id => $quantity) {
-            $perfume = \App\Models\Perfume::find($id);
-            
-            if ($perfume && $perfume->stock >= $quantity) {
+            $perfume = Perfume::find($id);
+            if (! $perfume) {
+                throw ValidationException::withMessages(['cart' => 'One of the cart items was not found.']);
+            }
+
+            if ($perfume->stock < $quantity) {
+                throw ValidationException::withMessages(['cart' => "Only {$perfume->stock} units are available for {$perfume->name}. Please update your cart."]);
+            }
+
+            $items[] = compact('perfume', 'quantity');
+        }
+
+        DB::transaction(function () use ($request, $items) {
+            $order = Order::create([
+                'user_id' => auth()->id(),
+                'total_amount' => 0,
+                'status' => 'pending',
+            ]);
+
+            $total = 0;
+
+            foreach ($items as $item) {
+                $perfume = $item['perfume'];
+                $quantity = $item['quantity'];
+
                 $subtotal = $perfume->price * $quantity;
                 $total += $subtotal;
 
@@ -101,18 +132,16 @@ public function checkout(Request $request)
                     'order_id' => $order->id,
                     'perfume_id' => $perfume->id,
                     'quantity' => $quantity,
-                    'price' => $perfume->price, // Snapshot of current price
+                    'price' => $perfume->price,
                 ]);
 
                 $perfume->decrement('stock', $quantity);
             }
-        }
 
-        // 3. Update the final total on the order
-        $order->update(['total_amount' => $total]);
-    });
+            $order->update(['total_amount' => $total]);
+        });
 
-    $request->session()->forget('cart');
-    return redirect()->route('orders.index')->with('message', 'Order placed successfully!');
-}
+        $request->session()->forget('cart');
+        return redirect()->route('orders.index')->with('message', 'Order placed successfully!');
+    }
 }

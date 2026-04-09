@@ -1,7 +1,9 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import { Head, Link, router } from '@inertiajs/react';
+import { Head, Link, router, usePage } from '@inertiajs/react';
 
 export default function Show({ auth, items }) {
+    const { flash = {}, errors = {} } = usePage().props;
+
     // Calculate Total Price
     const subtotal = items.reduce((acc, item) => acc + (item.price * item.quantity), 0);
 
@@ -17,6 +19,16 @@ export default function Show({ auth, items }) {
             <Head title="Cart" />
 
             <div className="py-12 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                {flash.message && (
+                    <div className="mb-6 rounded-xl border border-green-200 bg-green-50 px-6 py-4 text-sm text-green-800">
+                        {flash.message}
+                    </div>
+                )}
+                {errors.cart && (
+                    <div className="mb-6 rounded-xl border border-red-200 bg-red-50 px-6 py-4 text-sm text-red-800">
+                        {errors.cart}
+                    </div>
+                )}
                 {items.length === 0 ? (
                     <div className="text-center py-20 bg-white rounded-xl shadow-sm border border-gray-100">
                         <p className="text-gray-500 font-serif italic text-xl mb-6">Your bag is currently empty.</p>
@@ -54,8 +66,15 @@ export default function Show({ auth, items }) {
                                                     <div className="inline-flex items-center border border-gray-200 rounded-full px-2 py-1">
                                                         <button onClick={() => updateQty(item.id, 'decrease')} className="px-2 text-gray-500 hover:text-black">-</button>
                                                         <span className="px-3 text-sm font-medium">{item.quantity}</span>
-                                                        <button onClick={() => updateQty(item.id, 'increase')} className="px-2 text-gray-500 hover:text-black">+</button>
+                                                        <button
+                                                            onClick={() => updateQty(item.id, 'increase')}
+                                                            disabled={item.quantity >= item.stock}
+                                                            className={`px-2 ${item.quantity >= item.stock ? 'text-gray-300 cursor-not-allowed' : 'text-gray-500 hover:text-black'}`}
+                                                        >
+                                                            +
+                                                        </button>
                                                     </div>
+                                                    <p className="mt-2 text-xs text-gray-500">Available: {item.stock}</p>
                                                 </td>
                                                 <td className="px-4 py-4 text-sm font-medium text-gray-900">Ksh. {(item.price * item.quantity).toFixed(2)}</td>
                                                 <td className="px-4 py-4 text-sm">

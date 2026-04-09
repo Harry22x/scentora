@@ -3,6 +3,7 @@ import './PerfumeCardcss.css';
 import { router } from '@inertiajs/react';
 
 export default function PerfumeCard({ perfume }) {
+    console.log(perfume.imageUrl)
     return (
         <div className="perfume-card">
             <div className="card-content">
